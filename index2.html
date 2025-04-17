@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Home Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .slide-up {
+      transform: translateY(100%);
+      transition: transform 0.5s ease-in-out;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+    }
+    .slide-up.open {
+      transform: translateY(0);
+    }
+    .active-box {
+      background-color: #586af6 !important;
+      color: white;
+    }
+    .active-box img {
+      filter: brightness(0) invert(1);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Top Section -->
+  <div class="p-4 space-y-6">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <button onclick="window.location.href='index3.html'" class="text-blue-500">
+          <!-- Left caret arrow icon -->
+          <img src="https://img.icons8.com/ios/50/000000/left.png" alt="Back Icon" class="w-6 h-6">
+        </button>
+        <h1 class="text-xl font-bold text-gray-800">Living Room</h1>
+      </div>
+      <span class="text-red-500 font-semibold">● Live</span>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-700 font-semibold">5 Devices <span style="color:#586af6!important;" class="text-blue-500">2 active</span></p>
+      </div>
+      <button style="background-color:#586af6!important;"  class="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-xl" id="addGadgetBtn">+</button>
+    </div>
+
+    <!-- Device Cards -->
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Refrigerator -->
+      <div class="bg-white p-6 rounded-xl shadow flex flex-col items-center justify-center transition-all" id="refrigeratorBox">
+        <div class="refrigeratorContent cursor-pointer flex flex-col items-center">
+          <img src="https://img.icons8.com/ios/50/000000/fridge.png" class="w-12 h-12 mb-2" alt="Refrigerator Icon">
+          <span class="font-medium text-gray-700">Refrigerator</span>
+        </div>
+        <button class="toggle bg-gray-300 w-10 h-6 rounded-full relative mt-4">
+          <span class="dot bg-white w-4 h-4 rounded-full absolute top-1 left-1 transition-all"></span>
+        </button>
+      </div>
+
+      <!-- Lightbulb -->
+      <div class="bg-white p-4 rounded-xl shadow flex flex-col items-center justify-center" id="lightbulbBox">
+        <img src="https://img.icons8.com/ios-filled/50/000000/light-on.png" class="w-12 h-12 mb-2" alt="Lightbulb Icon">
+        <span class="font-medium text-gray-700">Lightbulb</span>
+        <button class="toggle bg-gray-300 w-10 h-6 rounded-full relative mt-4">
+          <span class="dot bg-white w-4 h-4 rounded-full absolute top-1 left-1 transition-all"></span>
+        </button>
+      </div>
+
+      <!-- Air Conditioner -->
+      <div class="bg-white p-4 rounded-xl shadow flex flex-col items-center justify-center" id="acBox">
+        <img src="https://img.icons8.com/ios/50/000000/air-conditioner.png" class="w-12 h-12 mb-2" alt="Air Conditioner Icon">
+        <span class="font-medium text-gray-700">Air Conditioner</span>
+        <button class="toggle bg-gray-300 w-10 h-6 rounded-full relative mt-4">
+          <span class="dot bg-white w-4 h-4 rounded-full absolute top-1 left-1 transition-all"></span>
+        </button>
+      </div>
+
+      <!-- Fan -->
+      <div class="bg-white p-4 rounded-xl shadow flex flex-col items-center justify-center" id="fanBox">
+        <img src="https://img.icons8.com/ios/50/000000/fan.png" class="w-12 h-12 mb-2" alt="Fan Icon">
+        <span class="font-medium text-gray-700">Fan</span>
+        <button class="toggle bg-gray-300 w-10 h-6 rounded-full relative mt-4">
+          <span class="dot bg-white w-4 h-4 rounded-full absolute top-1 left-1 transition-all"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-white p-4 rounded-xl shadow">
+      <h2 class="text-lg font-semibold text-gray-800">Living Room</h2>
+      <button style="background-color:#586af6!important;" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg" id="addGadgetBtnBottom">Add Gadget</button>
+    </div>
+  </div>
+
+  <div class="bg-white p-4 rounded-t-2xl shadow-inner flex justify-around items-center fixed bottom-0 left-0 right-0">
+    <button class="nav-btn active" id="homeBtn" onclick="window.location.href='index3.html'">
+      <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6" alt="Home Icon">
+    </button>
+    <button class="nav-btn" id="searchBtn" onclick="window.location.href='search.html'">
+      <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6" alt="Search Icon">
+    </button>
+    <button class="nav-btn" id="personBtn" onclick="window.location.href='profile.html'">
+      <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6" alt="Person Icon">
+    </button>
+    <button class="nav-btn" id="settingsBtn" onclick="window.location.href='settings.html'">
+      <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6" alt="Settings Icon">
+    </button>
+  </div>
+
+  <!-- Refrigerator Slide-Up Panel -->
+  <div id="refrigeratorPage" class="slide-up bg-white p-6 rounded-t-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">Refrigerator Settings</h2>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-gray-700">Refrigerator On/Off</span>
+      <button class="toggle bg-gray-300 w-14 h-8 rounded-full relative">
+        <span class="dot bg-white w-6 h-6 rounded-full absolute top-1 left-1 transition-all"></span>
+      </button>
+    </div>
+    <img src="https://img.icons8.com/ios/50/000000/fridge.png" class="w-24 h-24 mb-4" alt="Large Refrigerator Icon">
+    <div>
+      <label for="schedule" class="text-gray-700 mb-2 block">Schedule (6 PM to 6 AM)</label>
+      <input type="range" id="schedule" min="0" max="24" step="1" value="12" class="w-full">
+      <span id="scheduleValue" class="block text-center mt-2">12:00 AM</span>
+    </div>
+    <button style="background-color:#586af6!important;" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4" id="closeRefrigeratorPage">Close</button>
+  </div>
+
+  <!-- Lightbulb Slide-Up Panel -->
+  <div id="lightbulbPage" class="slide-up bg-white p-6 rounded-t-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">Lightbulb Settings</h2>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-gray-700">Lightbulb On/Off</span>
+      <button class="toggle bg-gray-300 w-14 h-8 rounded-full relative">
+        <span class="dot bg-white w-6 h-6 rounded-full absolute top-1 left-1 transition-all"></span>
+      </button>
+    </div>
+    <img src="https://img.icons8.com/ios-filled/50/000000/light-on.png" class="w-24 h-24 mb-4" alt="Large Lightbulb Icon">
+    <button style="background-color:#586af6!important;" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4" id="closeLightbulbPage">Close</button>
+  </div>
+
+  <!-- Air Conditioner Slide-Up Panel -->
+  <div id="acPage" class="slide-up bg-white p-6 rounded-t-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">Air Conditioner Settings</h2>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-gray-700">AC On/Off</span>
+      <button class="toggle bg-gray-300 w-14 h-8 rounded-full relative">
+        <span class="dot bg-white w-6 h-6 rounded-full absolute top-1 left-1 transition-all"></span>
+      </button>
+    </div>
+    <img src="https://img.icons8.com/ios/50/000000/air-conditioner.png" class="w-24 h-24 mb-4" alt="Large AC Icon">
+    
+  <div>
+    <label for="acSchedule" class="text-gray-700 mb-2 block">Schedule (6 PM to 6 AM)</label>
+    <input type="range" id="acSchedule" min="0" max="24" step="1" value="12" class="w-full">
+    <span id="acScheduleValue" class="block text-center mt-2">12:00 AM</span>
+  </div>
+<button style="background-color:#586af6!important;" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4" id="closeAcPage">Close</button>
+  </div>
+
+  <!-- Fan Slide-Up Panel -->
+  <div id="fanPage" class="slide-up bg-white p-6 rounded-t-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">Fan Settings</h2>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-gray-700">Fan On/Off</span>
+      <button class="toggle bg-gray-300 w-14 h-8 rounded-full relative">
+        <span class="dot bg-white w-6 h-6 rounded-full absolute top-1 left-1 transition-all"></span>
+      </button>
+    </div>
+    <img src="https://img.icons8.com/ios/50/000000/fan.png" class="w-24 h-24 mb-4" alt="Large Fan Icon">
+    
+  <div>
+    <label for="fanSchedule" class="text-gray-700 mb-2 block">Schedule (6 PM to 6 AM)</label>
+    <input type="range" id="fanSchedule" min="0" max="24" step="1" value="12" class="w-full">
+    <span id="fanScheduleValue" class="block text-center mt-2">12:00 AM</span>
+  </div>
+<button style="background-color:#586af6!important;" class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4" id="closeFanPage">Close</button>
+  </div>
+
+  <!-- JavaScript -->
+  
+
+<script>
+  const toggles = document.querySelectorAll('.toggle');
+  const slideUps = document.querySelectorAll('.slide-up');
+
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dot = toggle.querySelector('.dot');
+      const isOn = dot.classList.contains('left-5');
+      dot.classList.toggle('left-1', isOn);
+      dot.classList.toggle('left-5', !isOn);
+      const parentBox = toggle.closest('div');
+      if (parentBox) parentBox.classList.toggle('active-box', !isOn);
+
+      // Sync toggle if in settings or dashboard
+      const settingPanel = toggle.closest('.slide-up');
+      if (settingPanel) {
+        const id = settingPanel.id.replace('Page', 'Box');
+        const mainToggle = document.querySelector(`#${id} .toggle .dot`);
+        if (mainToggle) {
+          mainToggle.classList.toggle('left-5', !isOn);
+          mainToggle.classList.toggle('left-1', isOn);
+          document.getElementById(id).classList.toggle('active-box', !isOn);
+        }
+      }
+
+      const dashboardPanel = toggle.closest('.bg-white');
+      if (dashboardPanel && dashboardPanel.id) {
+        const settingPanelId = dashboardPanel.id.replace('Box', 'Page');
+        const settingToggle = document.querySelector(`#${settingPanelId} .toggle .dot`);
+        if (settingToggle) {
+          settingToggle.classList.toggle('left-5', !isOn);
+          settingToggle.classList.toggle('left-1', isOn);
+          document.getElementById(settingPanelId).classList.toggle('active-box', !isOn);
+        }
+      }
+    });
+  });
+
+  function openPanel(panelId) {
+    slideUps.forEach(p => p.classList.remove('open'));
+    document.getElementById(panelId).classList.add('open');
+  }
+
+  document.querySelector('#refrigeratorBox .refrigeratorContent').addEventListener('click', () => openPanel('refrigeratorPage'));
+  document.getElementById('closeRefrigeratorPage').addEventListener('click', () => refrigeratorPage.classList.remove('open'));
+
+  document.querySelector('#lightbulbBox').addEventListener('click', () => openPanel('lightbulbPage'));
+  document.getElementById('closeLightbulbPage').addEventListener('click', () => lightbulbPage.classList.remove('open'));
+
+  document.querySelector('#acBox').addEventListener('click', () => openPanel('acPage'));
+  document.getElementById('closeAcPage').addEventListener('click', () => acPage.classList.remove('open'));
+
+  document.querySelector('#fanBox').addEventListener('click', () => openPanel('fanPage'));
+  document.getElementById('closeFanPage').addEventListener('click', () => fanPage.classList.remove('open'));
+
+  // Schedule label updater
+  const updateScheduleLabel = (input, label) => {
+    input.addEventListener('input', () => {
+      const hours = parseInt(input.value);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHour = hours % 12 === 0 ? 12 : hours % 12;
+      label.textContent = `${displayHour}:00 ${ampm}`;
+    });
+  };
+
+  updateScheduleLabel(document.getElementById('schedule'), document.getElementById('scheduleValue'));
+  updateScheduleLabel(document.getElementById('lightSchedule'), document.getElementById('lightScheduleValue'));
+  updateScheduleLabel(document.getElementById('acSchedule'), document.getElementById('acScheduleValue'));
+  updateScheduleLabel(document.getElementById('fanSchedule'), document.getElementById('fanScheduleValue'));
+</script>
+
+</body>
+</html>

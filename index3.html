@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Home Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    
+    .room-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      cursor: pointer;
+    }
+    .room-box .room-icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 0.75rem auto;
+      border-radius: 50%;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .room-box .room-icon img {
+      width: 2rem;
+      height: 2rem;
+    }
+    .delete-btn img {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Top Section -->
+  <div class="p-4 space-y-6 pb-24">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-8 h-8 mr-2" alt="Profile Icon">
+        <span class="text-lg font-semibold text-gray-800">Hi, User</span>
+      </div>
+      <button class="bg-gray-300 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full text-xl" id="notificationBtn">
+        <img src="https://img.icons8.com/ios/50/000000/appointment-reminders.png" class="w-5 h-5" alt="Notification Icon">
+      </button>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm text-gray-700 font-semibold">Rooms <span style="color:#586af6!important;" class="text-blue-500" id="roomCount">0 active</span></p>
+      </div>
+      <button style="background-color:#586af6!important;" class="bg-blue-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-xl" id="addRoomBtn">+</button>
+    </div>
+
+    <!-- Room Boxes -->
+    <div id="roomContainer" class="grid grid-cols-2 gap-4 mt-4"></div>
+
+    <!-- Add Room Button -->
+    <div class="mt-6 bg-white p-4 rounded-xl shadow">
+      <button style="background-color:#586af6!important;" class="w-full bg-blue-500 text-white py-2 rounded-lg" id="addRoomBtnBottom">Add Room</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bg-white p-4 rounded-t-2xl shadow-inner flex justify-around items-center fixed bottom-0 left-0 right-0">
+    <button class="nav-btn active" id="homeBtn" onclick="window.location.href='index3.html'">
+      <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6" alt="Home Icon">
+    </button>
+    <button class="nav-btn" id="searchBtn" onclick="window.location.href='search.html'">
+      <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6" alt="Search Icon">
+    </button>
+    <button class="nav-btn" id="personBtn" onclick="window.location.href='profile.html'">
+      <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6" alt="Person Icon">
+    </button>
+    <button class="nav-btn" id="settingsBtn" onclick="window.location.href='settings.html'">
+      <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6" alt="Settings Icon">
+    </button>
+  </div>
+
+  <script>
+    const roomContainer = document.getElementById('roomContainer');
+    const addRoomBtns = [document.getElementById('addRoomBtn'), document.getElementById('addRoomBtnBottom')];
+    const roomCount = document.getElementById('roomCount');
+
+    const defaultRooms = [
+      { name: 'Living Room', icon: 'https://img.icons8.com/ios/50/000000/living-room.png', link: 'index2.html' },
+      { name: 'Bedroom', icon: 'https://img.icons8.com/ios/50/000000/bed.png' },
+      { name: 'Kitchen', icon: 'https://img.icons8.com/ios/50/000000/kitchen.png' },
+      { name: 'Toilet', icon: 'https://img.icons8.com/ios/50/000000/toilet.png' }
+    ];
+
+    function saveRoomsToStorage(rooms) {
+      localStorage.setItem('customRooms', JSON.stringify(rooms));
+    }
+
+    function getRoomsFromStorage() {
+      return JSON.parse(localStorage.getItem('customRooms') || '[]');
+    }
+
+    function updateRoomCount() {
+      const count = roomContainer.querySelectorAll('.room-box').length;
+      roomCount.textContent = `${count} active`;
+    }
+
+    function createRoomElement(roomName, iconURL, isCustom = false, link = null) {
+      const roomBox = document.createElement('div');
+      roomBox.classList.add('room-box');
+
+      if (link) {
+        roomBox.addEventListener('click', () => {
+          window.location.href = link;
+        });
+      }
+
+      roomBox.innerHTML = `
+        ${isCustom ? `
+        <button class="absolute top-2 right-2 text-red-500 delete-btn" title="Delete Room">
+          <img src="https://img.icons8.com/ios-glyphs/30/000000/delete-sign.png" />
+        </button>` : ``}
+        <div class="room-icon"><img src="${iconURL}" alt="${roomName} Icon"></div>
+        <span class="font-medium text-gray-700">${roomName}</span>
+      `;
+
+      if (isCustom) {
+        const deleteBtn = roomBox.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          roomBox.remove();
+          const savedRooms = getRoomsFromStorage().filter(room => room.name !== roomName);
+          saveRoomsToStorage(savedRooms);
+          updateRoomCount();
+        });
+      }
+
+      return roomBox;
+    }
+
+    function renderRooms() {
+      roomContainer.innerHTML = '';
+      defaultRooms.forEach(room => {
+        roomContainer.appendChild(createRoomElement(room.name, room.icon, false, room.link));
+      });
+      getRoomsFromStorage().forEach(room => {
+        roomContainer.appendChild(createRoomElement(room.name, room.icon, true));
+      });
+      updateRoomCount();
+    }
+
+    function addNewRoom() {
+      const roomName = prompt("Enter the name of the new room:");
+      if (roomName) {
+        const newRoom = { name: roomName, icon: "https://img.icons8.com/ios/50/000000/room.png" };
+        const savedRooms = getRoomsFromStorage();
+        savedRooms.push(newRoom);
+        saveRoomsToStorage(savedRooms);
+        renderRooms();
+      }
+    }
+
+    addRoomBtns.forEach(btn => btn.addEventListener('click', addNewRoom));
+
+    window.addEventListener('DOMContentLoaded', renderRooms);
+  </script>
+
+</body>
+</html>
