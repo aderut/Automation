@@ -1,0 +1,81 @@
+<!-- search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+
+  <div class="flex items-center space-x-2 mb-4">
+    <button onclick="window.history.back()" class="text-blue-500">
+      <img src="https://img.icons8.com/ios/50/000000/left.png" class="w-6 h-6" alt="Back">
+    </button>
+    <h1 class="text-xl font-bold text-gray-800">Search</h1>
+  </div>
+  <div class="bg-white p-4 rounded-t-2xl shadow-inner flex justify-around items-center fixed bottom-0 left-0 right-0">
+    <button class="nav-btn active" id="homeBtn" onclick="window.location.href='index3.html'">
+      <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6" alt="Home Icon">
+    </button>
+    <button class="nav-btn" id="searchBtn" onclick="window.location.href='index5.html'">
+      <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6" alt="Search Icon">
+    </button>
+    <button class="nav-btn" id="personBtn" onclick="window.location.href='index6.html'">
+      <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6" alt="Person Icon">
+    </button>
+    <button class="nav-btn" id="settingsBtn" onclick="window.location.href='index4.html'">
+      <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6" alt="Settings Icon">
+    </button>
+  </div>
+  <input 
+    type="text" 
+    placeholder="Search for a device or room..." 
+    id="searchInput"
+    class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+  />
+
+  <ul id="resultsList" class="space-y-2">
+    <!-- Results will be inserted here -->
+  </ul>
+
+  <script>
+    const data = [
+      "Living Room",
+      "Bedroom",
+      "Kitchen",
+      "Toilet",
+      "Refrigerator",
+      "Fan",
+      "Lightbulb",
+      "Air Conditioner"
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('resultsList');
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      resultsList.innerHTML = '';
+
+      if (query.trim() === '') return;
+
+      const results = data.filter(item => item.toLowerCase().includes(query));
+
+      if (results.length === 0) {
+        resultsList.innerHTML = `<li class="text-gray-500">No results found.</li>`;
+        return;
+      }
+
+      results.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.className = "bg-white p-3 rounded-lg shadow";
+        resultsList.appendChild(li);
+      });
+    });
+  </script>
+
+</body>
+</html>

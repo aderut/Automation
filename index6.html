@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white h-screen flex flex-col justify-between text-black">
+
+  <!-- Header -->
+  <div class="flex items-center p-4 space-x-3">
+    <button onclick="history.back()">
+      <img src="https://img.icons8.com/ios-glyphs/30/000000/left.png" class="w-6 h-6" alt="Back"/>
+    </button>
+    <div class="flex items-center space-x-3">
+      <img src="https://img.icons8.com/ios-filled/50/586af6/user-male-circle.png" class="w-10 h-10" alt="User Icon" />
+      <div>
+        <p class="font-semibold text-base">User</p>
+        <p class="text-gray-600 text-sm">@user.email</p>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white p-4 rounded-t-2xl shadow-inner flex justify-around items-center fixed bottom-0 left-0 right-0">
+    <button class="nav-btn active" id="homeBtn" onclick="window.location.href='index3.html'">
+      <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6" alt="Home Icon">
+    </button>
+    <button class="nav-btn" id="searchBtn" onclick="window.location.href='index5.html'">
+      <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6" alt="Search Icon">
+    </button>
+    <button class="nav-btn" id="personBtn" onclick="window.location.href='index6.html'">
+      <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6" alt="Person Icon">
+    </button>
+    <button class="nav-btn" id="settingsBtn" onclick="window.location.href='index4.html'">
+      <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6" alt="Settings Icon">
+    </button>
+  </div>
+
+  <!-- Options -->
+  <div class="px-6 space-y-6 mt-6 text-sm">
+
+    <a href="subscription.html" class="block hover:opacity-80">
+      <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+        <div class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/ios-filled/24/586af6/crown.png" class="w-5 h-5" alt="Subscription" />
+          <span>Subscription</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="support.html" class="block hover:opacity-80">
+      <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+        <div class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/ios-filled/24/586af6/help.png" class="w-5 h-5" alt="Support" />
+          <span>Support</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="logout.html" class="block hover:opacity-80">
+      <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+        <div class="flex items-center space-x-2">
+          <img src="https://img.icons8.com/ios-filled/24/586af6/logout-rounded-left.png" class="w-5 h-5" alt="Log out" />
+          <span>Log out</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+ 
+
+</body>
+</html>
