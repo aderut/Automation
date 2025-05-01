@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-start p-4">
+
+  <div class="flex items-center gap-3">
+    <a href="../index3.html" class="text-blue-500">
+      <img src="https://img.icons8.com/ios-filled/50/1e90ff/left.png" class="w-6 h-6" alt="Back" />
+    </a>
+    <h1 id="roomName" class="text-xl font-semibold text-gray-800">Room Name</h1>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const room = localStorage.getItem("selectedRoom");
+      if (room) {
+        document.getElementById("roomName").textContent = room;
+      }
+    });
+  </script>
+
+</body>
+</html>
