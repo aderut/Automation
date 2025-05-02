@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24">
+
+  <!-- Profile Header -->
+  <div class="p-6 flex flex-col items-center bg-white shadow-sm rounded-b-xl">
+    <img src="https://img.icons8.com/ios/100/000000/user.png" class="w-24 h-24 rounded-full border p-2" alt="User Profile" />
+    <h2 class="text-xl font-semibold text-gray-800 mt-4">Hi, User</h2>
+    <p class="text-sm text-gray-500">user@example.com</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="p-4 space-y-4">
+    <div class="bg-white rounded-xl shadow p-4">
+      <h3 class="text-md font-semibold text-gray-700 mb-2">Account Settings</h3>
+      <ul class="text-sm text-gray-600 space-y-2">
+        <li>Change Password</li>
+        <li>Privacy Settings</li>
+        <li>Notifications</li>
+        <li>Logout</li>
+      </ul>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-4">
+      <h3 class="text-md font-semibold text-gray-700 mb-2">About</h3>
+      <p class="text-sm text-gray-600">This is your user dashboard. You can manage your preferences, view your settings, and update your profile info from here.</p>
+    </div>
+  </div>
+
+  <!-- Footer Navigation -->
+  <footer class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-inner z-50">
+    <div class="flex justify-around items-center py-3 text-gray-800">
+      <a href="index3.html" class="flex flex-col items-center text-xs">
+        <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6 mb-1" alt="Home">
+        Dashboard
+      </a>
+      <a href="profile.html" class="flex flex-col items-center text-xs">
+        <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6 mb-1" alt="Profile">
+        Profile
+      </a>
+      <a href="javascript:void(0)" onclick="openSearch()" class="flex flex-col items-center text-xs">
+        <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6 mb-1" alt="Search">
+        Search
+      </a>
+      <a href="#" class="flex flex-col items-center text-xs">
+        <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6 mb-1" alt="Settings">
+        Settings
+      </a>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -12,9 +12,9 @@
       gap: 0.5rem;
       padding-bottom: 0.5rem;
     }
-    .master-toggle {
-  width: 4rem;
-  height: 8rem;
+      .master-toggle {
+  width: 3rem;
+  height: 6rem;
   background-color: #d1d5db;
   border-radius: 2rem;
   position: relative;
@@ -102,10 +102,15 @@
     input:checked + .vertical-toggle .knob {
   transform: none;
 }
+
+
+
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
 <div class="p-4 space-y-6 pb-24">
+  <div class="text-center text-gray-600 text-sm mt-2" id="dateTimeDisplay"></div>
+
   <div class="flex justify-between items-center mt-2">
     <div class="flex items-center">
       <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-8 h-8 mr-2" alt="Profile Icon">
@@ -117,24 +122,35 @@
   </div>
 
   <div class="flex justify-between items-start mt-6">
-    <div class="flex flex-col items-center gap-2 mt-0">
+    <!-- Left: Power Status + Device Points -->
+    <div class="flex flex-col items-start gap-2">
       <div class="flex items-center gap-2">
         <p class="text-sm font-semibold text-gray-800">Power Status</p>
         <button id="powerStatusBtn" class="w-4 h-4 bg-green-500 rounded-full shadow"></button>
       </div>
-      <div class="flex space-x-4 text-sm text-gray-600">
-        <span class="font-semibold">P4</span>
-        <span class="font-semibold">P8</span>
-        <span class="font-semibold">P16</span>
+      <div class="flex flex-col items-center">
+        <p class="text-xs text-gray-500 font-medium mb-1">Device Point</p>
+        <div class="flex space-x-4 text-sm text-gray-600">
+          <span class="font-semibold">P4</span>
+          <span class="font-semibold">P8</span>
+          <span class="font-semibold">P16</span>
+        </div>
       </div>
     </div>
+  
+    <!-- Right: Date & Time + Master Control -->
     <div class="flex flex-col items-center">
+      <div class="mb-2 text-center">
+        <p id="dateDisplay" class="text-xs text-gray-500 font-medium"></p>
+        <p id="timeDisplay" class="text-sm text-gray-700 font-semibold"></p>
+      </div>
       <div id="masterToggle" class="master-toggle cursor-pointer">
         <div class="knob"></div>
       </div>
       <p class="mt-2 text-sm text-gray-700 font-semibold">Master Control</p>
     </div>
   </div>
+  
 
   <div class="scrolling-wrapper mt-6" id="deviceList"></div>
 
@@ -145,7 +161,9 @@
       <button onclick="addRoom()" class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-xl">+</button>
     </div>
     <div class=" p-2 max-h-80 overflow-y-auto" style="scrollbar-width: thin;">
-      <div id="roomList" class="grid grid-cols-2 gap-4"></div>
+      <div id="roomList" class="grid gap-4" style="grid-template-columns: repeat(2, minmax(0, 1fr));"></div>
+
+
     </div>
   </div>
   
@@ -208,6 +226,56 @@
     </div>
   </div>
 </div>
+
+
+<!-- Footer Navigation -->
+<!-- Footer Navigation -->
+<footer class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-inner z-50">
+  <div class="flex justify-around items-center py-3 text-gray-800">
+    <a href="index3.html" class="flex flex-col items-center text-xs">
+      <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6 mb-1" alt="Home">
+      Dashboard
+    </a>
+    <a href="profile.html" class="flex flex-col items-center text-xs">
+      <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6 mb-1" alt="Profile">
+      Profile
+    </a>
+    <a href="javascript:void(0)" onclick="openSearch()" class="flex flex-col items-center text-xs">
+      <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6 mb-1" alt="Search">
+      Search
+    </a>
+    
+    <a href="#" class="flex flex-col items-center text-xs">
+      <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6 mb-1" alt="Settings">
+      Settings
+    </a>
+  </div>
+</footer>
+<!-- Blurred Background + Slide-Up Search Modal -->
+<div id="searchOverlay"
+     class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm hidden z-[9998]"
+     onclick="closeSearch()"></div>
+
+<div id="searchModal"
+     class="fixed inset-x-0 bottom-0 h-[60%] bg-white shadow-2xl rounded-t-2xl p-4 transform translate-y-full transition-transform duration-300 ease-in-out z-[9999] overflow-y-auto">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">Search</h2>
+    <button onclick="closeSearch()" class="text-gray-500 text-2xl leading-none">&times;</button>
+  </div>
+
+  <input type="text" id="searchInput"
+         placeholder="Search rooms, devices..."
+         oninput="filterResults()"
+         class="w-full p-2 border border-gray-300 rounded mb-4"/>
+
+  <div id="searchResults" class="space-y-2 text-sm text-gray-700">
+    <!-- Filtered items will appear here -->
+  </div>
+</div>
+
+
+
+
 
 <script>
 const devices = [
@@ -356,7 +424,8 @@ const rooms = [];
     function renderRooms() {
   const container = document.getElementById("roomList");
   container.innerHTML = rooms.map((room, index) => `
-  <div class="bg-white p-2 rounded-lg shadow relative flex flex-col items-center text-xs w-32 h-36">
+  <div class="bg-white p-2 rounded-lg shadow relative flex flex-col items-center text-xs h-36 w-full">
+
 
       <div class="absolute top-2 right-2 text-gray-500 text-xl cursor-pointer" onclick="toggleRoomDropdown(this, ${index})">
         ⋮
@@ -426,9 +495,45 @@ function selectRoomIconModal(icon, el) {
   }
 }
 
-function closeRoomIconModal() {
-  document.getElementById("roomIconModal").classList.add("hidden");
+function updateDateTime() {
+  const now = new Date();
+  const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+
+  document.getElementById("dateDisplay").textContent = now.toLocaleDateString('en-US', dateOptions);
+  document.getElementById("timeDisplay").textContent = now.toLocaleTimeString('en-US', timeOptions);
 }
+
+// Initial call
+updateDateTime();
+// Keep updating every second
+setInterval(updateDateTime, 1000);
+
+const allItems = [
+  "Fridge", "Bulb", "Socket", "AC", "TV", "Oven", "Fan", "Heater",
+  "Bedroom", "Living Room", "Kitchen", "Office", "Garage"
+];
+
+function openSearch() {
+  document.getElementById("searchModal").classList.remove("translate-y-full");
+  document.getElementById("searchOverlay").classList.remove("hidden");
+}
+
+function closeSearch() {
+  document.getElementById("searchModal").classList.add("translate-y-full");
+  document.getElementById("searchOverlay").classList.add("hidden");
+}
+
+function filterResults() {
+  const input = document.getElementById("searchInput").value.toLowerCase();
+  const resultsContainer = document.getElementById("searchResults");
+  const filtered = allItems.filter(item => item.toLowerCase().includes(input));
+
+  resultsContainer.innerHTML = filtered.length
+    ? filtered.map(item => `<div class="p-2 bg-gray-100 rounded">${item}</div>`).join("")
+    : `<div class="text-gray-400 italic">No results found</div>`;
+}
+
 
 </script>
 </body>
