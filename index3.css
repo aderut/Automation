@@ -1,0 +1,112 @@
+.scrolling-wrapper { 
+    display: flex; 
+    overflow-x: auto; 
+    gap: 0.5rem; 
+    padding-bottom: 0.5rem; 
+  }
+  .vertical-toggle {
+    width: 1.5rem; 
+    height: 3rem; 
+    background-color: #e5e7eb; 
+    border-radius: 9999px;
+    position: relative; 
+    transition: background-color 0.3s; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-end; 
+    padding-bottom: 0.4rem;
+  }
+  input.device-toggle:checked + .vertical-toggle {
+    background-color: #3b82f6; 
+    align-items: flex-start; 
+    padding-top: 0.5rem;
+  }
+  .vertical-toggle .knob { 
+    width: 1rem; 
+    height: 1rem; 
+    background-color: black; 
+    border-radius: 9999px; 
+    transition: transform 0.3s; }
+
+  .master-toggle {
+    width: 3rem; 
+    height: 7rem; 
+    background-color: #d1d5db; 
+    border-radius: 2rem;
+    position: relative; 
+    transition: background-color 0.3s; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-end; 
+    padding-bottom: 0.5rem;
+  }
+  .master-toggle.active {
+    background-color: #3b82f6; 
+    align-items: flex-start; 
+    padding-top: 0.5rem;
+  }
+  .master-toggle .knob { 
+    width: 2rem; 
+    height: 2rem; 
+    background-color: black; 
+    border-radius: 9999px; }
+
+  .master-toggle-horizontal {
+    width: 3rem; 
+    height: 1.5rem; 
+    background-color: #e5e7eb; 
+    border-radius: 9999px;
+    position: relative; 
+    transition: background-color 0.3s; 
+    display: flex; 
+    align-items: center;
+  }
+  input.room-toggle:checked + .master-toggle-horizontal {
+    background-color: #3b82f6;
+  }
+  .master-toggle-horizontal .knob {
+    width: 1rem; 
+    height: 1rem; 
+    background-color: black; 
+    border-radius: 9999px;
+    position: absolute; 
+    top: 0.25rem; 
+    left: 0.25rem; 
+    transition: transform 0.3s;
+  }
+  input.room-toggle:checked + .master-toggle-horizontal .knob {
+    transform: translateX(1.5rem);
+  }
+
+  .dropdown { 
+    position: absolute; 
+    top: 2rem; 
+    right: 0.5rem; 
+    background: white; 
+    border: 1px solid #ccc; 
+    border-radius: 0.5rem; 
+    display: none; z-index: 10; 
+    font-size: 0.875rem; 
+}
+  .dropdown.active { 
+    display: block; 
+}
+  .modal-backdrop { 
+    position: fixed; 
+    inset:0; 
+    background:rgba(0,0,0,0.7); 
+    display:none; z-index:40; 
+}
+  .modal { 
+    position: fixed; 
+    top:20%; 
+    left:50%; 
+    transform:translateX(-50%); 
+    background:white; 
+    padding:1.5rem; 
+    border-radius:0.5rem; 
+    width:90%; 
+    max-width:320px; 
+    display:none; 
+    z-index:50; 
+}

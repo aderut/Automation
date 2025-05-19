@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Home Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffffff;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .header i {
+      font-size: 26px;
+    }
+
+    .section {
+      border-bottom: 1px solid #ccc;
+      padding: 15px 0;
+    }
+
+    .section p {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .section span {
+      font-size: 14px;
+      color: gray;
+    }
+
+    .toggle-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    #mode-toggle {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #ddd;
+      transition: background-color 0.3s;
+    }
+
+    .bottom-nav i {
+      color: #000;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    body.dark-mode .section {
+      border-color: #444;
+    }
+
+    body.dark-mode .bottom-nav {
+      background-color: #1e1e1e;
+      border-top: 1px solid #444;
+    }
+
+    body.dark-mode .bottom-nav i {
+      color: white;
+    }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="header">
+          <i class="fas fa-cog" id="settings-icon"></i>
+          <div>Settings</div>
+        </div>
+    
+        <div class="section">
+          <p>Rooms</p>
+          <span>Rename, add and delete rooms</span>
+        </div>
+    
+        <div class="section">
+          <p>Gadgets</p>
+          <span>Rename, add and delete gadgets</span>
+        </div>
+    
+        <div class="section">
+          <p>Schedules</p>
+          <span>Reset and add new schedules</span>
+        </div>
+    
+        <div class="section">
+          <p>Theme</p>
+          <button id="mode-toggle">
+            <i class="fas fa-adjust"></i>
+            <span id="mode-text">Dark Mode</span>
+          </button>
+        </div>
+      </div>
+      <footer class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-inner z-50">
+        <div class="flex justify-around items-center py-3 text-gray-800">
+          <a href="index3.html" class="flex flex-col items-center text-xs">
+            <img src="https://img.icons8.com/ios/50/000000/home.png" class="w-6 h-6 mb-1" alt="Home">
+            Dashboard
+          </a>
+          <a href="profile.html" class="flex flex-col items-center text-xs">
+            <img src="https://img.icons8.com/ios/50/000000/user.png" class="w-6 h-6 mb-1" alt="Profile">
+            Profile
+          </a>
+          <a href="javascript:void(0)" onclick="openSearch()" class="flex flex-col items-center text-xs">
+            <img src="https://img.icons8.com/ios/50/000000/search.png" class="w-6 h-6 mb-1" alt="Search">
+            Search
+          </a>
+          
+          <a href="setting.html" class="flex flex-col items-center text-xs">
+            <img src="https://img.icons8.com/ios/50/000000/settings.png" class="w-6 h-6 mb-1" alt="Settings">
+            Settings
+          </a>
+        </div>
+      </footer>
+      <div id="searchModal"
+      class="fixed inset-x-0 bottom-0 h-[60%] bg-white shadow-2xl rounded-t-2xl p-4 transform translate-y-full transition-transform duration-300 ease-in-out z-[9999] overflow-y-auto">
+   <div class="flex justify-between items-center mb-4">
+     <h2 class="text-lg font-semibold text-gray-800">Search</h2>
+     <button onclick="closeSearch()" class="text-gray-500 text-2xl leading-none">&times;</button>
+   </div>
+ 
+   <input type="text" id="searchInput"
+          placeholder="Search rooms, devices..."
+          oninput="filterResults()"
+          class="w-full p-2 border border-gray-300 rounded mb-4"/>
+ 
+   <div id="searchResults" class="space-y-2 text-sm text-gray-700">
+     <!-- Filtered items will appear here -->
+   </div>
+ </div>
+      <script>
+        const modeToggle = document.getElementById('mode-toggle');
+        const modeText = document.getElementById('mode-text');
+    
+        modeToggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark-mode');
+          if (document.body.classList.contains('dark-mode')) {
+            modeText.textContent = 'Light Mode';
+          } else {
+            modeText.textContent = 'Dark Mode';
+          }
+        });
+      </script>
+  </body>
+  <script src="script.js"></script>
+  </html>

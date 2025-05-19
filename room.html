@@ -1,29 +1,201 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Room</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Home Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .vertical-toggle {
+      width: 2rem;
+      height: 4rem;
+      background-color: #e5e7eb;
+      border-radius: 9999px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 0.5rem;
+      transition: background-color 0.3s;
+    }
+    input.device-toggle:checked + .vertical-toggle {
+      background-color: #3b82f6;
+      align-items: flex-start;
+      padding-top: 0.5rem;
+    }
+    .vertical-toggle .knob {
+      width: 1.25rem;
+      height: 1.25rem;
+      background-color: black;
+      border-radius: 9999px;
+    }
+    .dropdown {
+      position: absolute;
+      top: 2.5rem;
+      right: 0.25rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      display: none;
+      z-index: 10;
+      font-size: 1rem;
+    }
+    .dropdown.active {
+      display: block;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      z-index: 40;
+    }
+    .modal {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      width: 90%;
+      max-width: 400px;
+      display: none;
+      z-index: 50;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-start p-4">
+<body class="bg-gray-100 p-6 min-h-screen text-base">
 
-  <div class="flex items-center gap-3">
-    <a href="../index3.html" class="text-blue-500">
-      <img src="https://img.icons8.com/ios-filled/50/1e90ff/left.png" class="w-6 h-6" alt="Back" />
-    </a>
-    <h1 id="roomName" class="text-xl font-semibold text-gray-800">Room Name</h1>
+  <!-- Back button and room title -->
+  <div class="flex items-center gap-4 mb-10">
+    <button onclick="goBack()" class="text-blue-600 text-3xl leading-none">
+      ←
+    </button>
+    <h1 id="roomTitle" class="text-3xl font-bold text-gray-800"></h1>
+  </div>
+
+  <!-- Device Grid -->
+  <div id="deviceGrid" class="grid grid-cols-2 gap-6"></div>
+
+  <!-- Modal Backdrop -->
+  <div id="modalBackdrop" class="modal-backdrop"></div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <h2 class="text-2xl font-bold mb-4">Edit Device</h2>
+    <input id="editNameInput" type="text" placeholder="Device Name" class="w-full border p-3 rounded-xl mb-4 text-base">
+    <div id="editIconChoices" class="grid grid-cols-4 gap-4 mb-4"></div>
+    <div class="flex justify-end">
+      <button onclick="closeEditModal()" class="bg-gray-400 text-white px-4 py-2 rounded-xl text-base mr-3">Cancel</button>
+      <button onclick="saveEdit()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-base">Save</button>
+    </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const room = localStorage.getItem("selectedRoom");
-      if (room) {
-        document.getElementById("roomName").textContent = room;
-      }
-    });
-  </script>
+    const allIcons = ['fridge','light','power-socket','air-conditioner','tv','microwave-oven','fan','radiator'];
+    const backdrop = document.getElementById('modalBackdrop');
+    const modal = document.getElementById('editModal');
+    const editInput = document.getElementById('editNameInput');
+    const editIcons = document.getElementById('editIconChoices');
 
+    let roomDevices = JSON.parse(localStorage.getItem('roomDevices')) || [];
+    const latestRoom = localStorage.getItem('selectedRoom') || 'Room';
+
+    document.getElementById('roomTitle').textContent = latestRoom;
+
+    let currentEditIndex = null;
+    let selectedIcon = null;
+
+    function goBack() {
+      window.location.href = 'index3.html';
+    }
+
+    function renderDevices() {
+      const grid = document.getElementById('deviceGrid');
+      const devices = roomDevices.filter(d => d.room === latestRoom);
+      grid.innerHTML = devices.map((d, i) => `
+        <div class="relative bg-white p-3 rounded-2xl shadow-xl text-base flex flex-col items-center gap-2">
+          <div class="absolute top-0 right-0 m-2 cursor-pointer text-gray-600 text-xl" onclick="toggleDropdown(event, ${i})">
+            ⋮
+            <div class="dropdown">
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="editDevice(${i})">Edit</div>
+              <div class="px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer" onclick="deleteDevice(${i})">Delete</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-6 mt-2">
+            <label><input type="checkbox" class="sr-only device-toggle"><div class="vertical-toggle"><div class="knob"></div></div></label>
+            <img src="https://img.icons8.com/ios/80/1e90ff/${d.icon}.png" class="w-12 h-12">
+          </div>
+          <p class="mt-1 font-medium text-center">${d.name}</p>
+        </div>
+      `).join('');
+    }
+
+    function toggleDropdown(evt, index) {
+      evt.stopPropagation();
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+      evt.currentTarget.querySelector('.dropdown').classList.toggle('active');
+    }
+
+    window.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    });
+
+    function editDevice(index) {
+      currentEditIndex = index;
+      const device = roomDevices.filter(d => d.room === latestRoom)[index];
+      editInput.value = device.name;
+      selectedIcon = device.icon;
+      showIconChoices();
+      backdrop.style.display = 'block';
+      modal.style.display = 'block';
+    }
+
+    function showIconChoices() {
+      editIcons.innerHTML = allIcons.map(icon => `
+        <img src="https://img.icons8.com/ios/80/1e90ff/${icon}.png"
+          class="w-12 h-12 cursor-pointer border-4 rounded-xl ${selectedIcon === icon ? 'border-blue-500' : 'border-transparent'}"
+          onclick="selectIcon('${icon}', this)">
+      `).join('');
+    }
+
+    function selectIcon(icon, el) {
+      selectedIcon = icon;
+      document.querySelectorAll('#editIconChoices img').forEach(img => {
+        img.classList.remove('border-blue-500');
+        img.classList.add('border-transparent');
+      });
+      el.classList.add('border-blue-500');
+      el.classList.remove('border-transparent');
+    }
+
+    function closeEditModal() {
+      modal.style.display = 'none';
+      backdrop.style.display = 'none';
+    }
+
+    function saveEdit() {
+      const name = editInput.value.trim();
+      if (!name || !selectedIcon) return;
+      const indexInAll = roomDevices.findIndex((d, i) =>
+        d.room === latestRoom && roomDevices.filter(d => d.room === latestRoom).indexOf(d) === currentEditIndex
+      );
+      roomDevices[indexInAll].name = name;
+      roomDevices[indexInAll].icon = selectedIcon;
+      localStorage.setItem('roomDevices', JSON.stringify(roomDevices));
+      closeEditModal();
+      renderDevices();
+    }
+
+    function deleteDevice(index) {
+      const filtered = roomDevices.filter(d => d.room === latestRoom);
+      const target = filtered[index];
+      roomDevices = roomDevices.filter(d => !(d.name === target.name && d.icon === target.icon && d.room === target.room));
+      localStorage.setItem('roomDevices', JSON.stringify(roomDevices));
+      renderDevices();
+    }
+
+    renderDevices();
+  </script>
 </body>
 </html>
